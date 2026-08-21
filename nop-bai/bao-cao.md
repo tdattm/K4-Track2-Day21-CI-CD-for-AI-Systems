@@ -13,11 +13,11 @@ HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau k
 
 | | |
 |---|---|
-| Họ và tên | ___ |
-| MSSV | ___ |
+| Họ và tên | Nguyễn Tiến Đạt |
+| MSSV | 2A202601678 |
 | Lớp / Khóa | K4 |
-| Repo GitHub | https://github.com/___/___ |
-| Ngày nộp | ___ |
+| Repo GitHub | https://github.com/tdattm/K4-Track2-Day21-CI-CD-for-AI-Systems.git |
+| Ngày nộp | 21/08/2026 |
 
 ---
 
@@ -27,13 +27,13 @@ HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau k
 
 | Lần chạy | n_estimators | learning_rate | max_depth | f1_score | accuracy |
 |---|---|---|---|---|---|
-| 1 | ___ | ___ | ___ | ___ | ___ |
-| 2 | ___ | ___ | ___ | ___ | ___ |
-| 3 | ___ | ___ | ___ | ___ | ___ |
+| 1 | 200 | 0.1 | 5 | 0.714932 | 0.874 |
+| 2 | 100 | 0.1 | 3 | 0.710900 | 0.878 |
+| 3 | 50 | 0.05 | 2 | 0.605128 | 0.846 |
 
-**Bộ siêu tham số đã chọn:** `n_estimators=___`, `learning_rate=___`, `max_depth=___`.
+**Bộ siêu tham số đã chọn:** `n_estimators=200`, `learning_rate=0.1`, `max_depth=5`.
 
-**Lý do:** ___
+**Lý do:** Cấu hình `n_estimators=200`, `learning_rate=0.1`, `max_depth=5` được chọn vì có `f1_score=0.714932`, cao nhất trong ba cấu hình và vượt ngưỡng chất lượng 0.65. Cấu hình `n_estimators=100`, `learning_rate=0.1`, `max_depth=3` có accuracy cao nhất, 0.878, nhưng F1 chỉ là 0.710900. Vì vậy, lần có accuracy cao nhất không trùng với lần có F1 cao nhất và không phải cấu hình được chọn. Việc này cho thấy accuracy không đủ để quyết định chất lượng khi lớp thu nhập cao là lớp cần quan tâm. Không thể kết luận trực tiếp về đánh đổi giữa `n_estimators` và `learning_rate` từ ba cấu hình trên vì `max_depth` cũng thay đổi đồng thời. Theo hướng dẫn của bài, learning rate thấp thường cần nhiều estimators hơn, nhưng các lần chạy này không phải bằng chứng độc lập cho nhận xét đó.
 
 <!--
 Trả lời trong phần Lý do:
@@ -49,7 +49,7 @@ Trả lời trong phần Lý do:
 
 <!-- Khoảng 120 - 150 từ. -->
 
-___
+Tập dữ liệu Adult mất cân bằng: lớp thu nhập trên 50K chỉ chiếm 24,8% số mẫu. Do đó, một mô hình luôn dự đoán “thu nhập thấp” vẫn có accuracy khoảng 0,752, dù không phát hiện được bất kỳ trường hợp thu nhập cao nào. Con số accuracy này dễ gây hiểu nhầm vì nó chủ yếu phản ánh lớp đa số. Với mô hình dự đoán như vậy, F1 của lớp dương bằng 0, vì precision và recall cho lớp thu nhập cao đều không hữu ích. F1 kết hợp precision và recall, nên phản ánh trực tiếp hơn khả năng tìm đúng các mẫu thu nhập cao mà bài toán quan tâm. Vì vậy, ngưỡng chất lượng của pipeline đặt trên `f1_score >= 0.65`, còn accuracy chỉ được ghi nhận để tham khảo. Khi tính F1, cần dùng `f1_score(y_eval, preds)` mặc định cho lớp dương; không dùng `average="weighted"` hoặc `average="macro"`, vì các cách trung bình này không còn đánh giá riêng lớp dương theo yêu cầu của lab.
 
 <!--
 Cần nêu được:
@@ -68,9 +68,8 @@ Cần nêu được:
 
 | Khó khăn | Nguyên nhân | Cách giải quyết |
 |---|---|---|
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
+| Cài đặt `scikit-learn==1.4.2` thất bại. | Môi trường ban đầu dùng Python 3.13, không tương thích với dependency được ghim. | Tạo virtual environment bằng Python 3.11 rồi cài lại dependencies. |
+| MLflow UI không hiển thị các lần chạy. | `.env` không tự nạp biến môi trường vào PowerShell, nên train và UI dùng các tracking URI khác nhau. | Khởi động UI với backend trùng tracking URI, hoặc đặt `MLFLOW_TRACKING_URI` trước khi train. |
 
 ---
 
